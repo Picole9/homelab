@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  home_assistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: home_assistant
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./volumes/home-assistant:/config
+    privileged: true
+    labels:
+      - traefik.http.routers.home-assistant.rule=Host('home-assistant.${DOMAIN}')
+      - traefik.http.routers.home-assistant.entrypoints=websecure
+      - traefik.http.routers.home-assistant.tls.certresolver=letsencrypt
+      - traefik.http.services.home-assistant.loadbalancer.server.port=8123

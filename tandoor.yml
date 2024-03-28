@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  db_recipes:
+    image: postgres:16-alpine
+    container_name: tandoor_db
+    restart: unless-stopped
+    volumes:
+      - ./volumes/tandoor/postgresql:/var/lib/postgresql/data
+    env_file:
+      - ./env/tandoor.env
+
+  web_recipes:
+    image: vabene1111/recipes
+    container_name: tandoor_web
+    restart: unless-stopped
+    env_file:
+      - ./env/tandoor.env
+    volumes:
+      - ./volumes/tandoor/staticfiles:/opt/recipes/staticfiles
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      - ./volumes/tandoor/nginx_config:/opt/recipes/nginx/conf.d
+      - ./volumes/tandoor/mediafiles:/opt/recipes/mediafiles
+    depends_on:
+      - db_recipes
+
+  nginx_recipes:
+    image: nginx:mainline-alpine
+    container_name: tandoor_nginx
+    restart: unless-stopped
+    env_file:
+      - ./env/tandoor.env
+      - ./env/traefik.env
+    depends_on:
+      - web_recipes
+    volumes:
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      - ./volumes/tandoor/nginx_config:/etc/nginx/conf.d:ro
+      - ./volumes/tandoor/staticfiles:/static:ro
+      - ./volumes/tandoor/mediafiles:/media:ro
+    labels:
+      - traefik.http.routers.tandoor.rule=Host('tandoor.${DOMAIN}')
+      - traefik.http.routers.tandoor.entrypoints=websecure
+      - traefik.http.routers.tandoor.tls.certresolver=letsencrypt
+      - traefik.http.services.tandoor.loadbalancer.server.port=80

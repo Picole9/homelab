@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    environment:
+      - PIHOLE_DNS_=8.8.8.8;8.8.8.4
+      - TZ=Europe/Berlin
+      - WEBPASSWORD=
+    env_file:
+      - ./env/traefik.env
+    volumes:
+      - ./volumes/pihole/etc-pihole:/etc/pihole
+      - ./volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
+    labels:
+      - traefik.http.routers.pihole.rule=Host('pihole.${DOMAIN}')
+      - traefik.http.routers.pihole.entrypoints=websecure
+      - traefik.http.routers.pihole.tls.certresolver=letsencrypt
+      - traefik.http.services.pihole.loadbalancer.server.port=80

@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    env_file:
+      - ./env/traefik.env
+    volumes:
+      - ./volumes/gitea/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - traefik.http.routers.gitea.rule=Host('gitea.${DOMAIN}')
+      - traefik.http.routers.gitea.entrypoints=websecure
+      - traefik.http.routers.gitea.tls.certresolver=letsencrypt
+      - traefik.http.service.gitea.loadbalancer.server.port=3000
+      - traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)
+      - traefik.tcp.routers.gitea-ssh.entrypoints=ssh
+      - traefik.tcp.services.gitea-ssh.loadbalancer.server.port=22
