@@ -7,14 +7,13 @@ services:
     environment:
       - USER_UID=1000
       - USER_GID=1000
-    env_file:
-      - ./env/traefik.env
     volumes:
       - ./volumes/gitea/data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
-      - traefik.http.routers.gitea.rule=Host('gitea.${DOMAIN}')
+      - traefik.enable=true
+      - traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)
       - traefik.http.routers.gitea.entrypoints=websecure
       - traefik.http.routers.gitea.tls.certresolver=letsencrypt
       - traefik.http.service.gitea.loadbalancer.server.port=3000

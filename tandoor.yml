@@ -29,7 +29,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./env/tandoor.env
-      - ./env/traefik.env
     depends_on:
       - web_recipes
     volumes:
@@ -38,7 +37,8 @@ services:
       - ./volumes/tandoor/staticfiles:/static:ro
       - ./volumes/tandoor/mediafiles:/media:ro
     labels:
-      - traefik.http.routers.tandoor.rule=Host('tandoor.${DOMAIN}')
+      - traefik.enable=true
+      - traefik.http.routers.tandoor.rule=Host(`tandoor.${DOMAIN}`)
       - traefik.http.routers.tandoor.entrypoints=websecure
       - traefik.http.routers.tandoor.tls.certresolver=letsencrypt
       - traefik.http.services.tandoor.loadbalancer.server.port=80

@@ -1,0 +1,9 @@
+version: "3.8"
+
+include:
+  - traefik.yml
+  # - gitea.yml
+  # - home-assistant.yml
+  - pihole.yml
+  # - tandoor.yml
+  # - watchtower.yml
