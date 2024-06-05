@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   gitea:
     image: gitea/gitea:latest
@@ -11,12 +10,15 @@ services:
       - ./volumes/gitea/data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      traefik:
+        ipv4_address: 172.21.0.13
     labels:
       - traefik.enable=true
       - traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)
-      - traefik.http.routers.gitea.entrypoints=websecure
-      - traefik.http.routers.gitea.tls.certresolver=letsencrypt
-      - traefik.http.service.gitea.loadbalancer.server.port=3000
+      - traefik.http.routers.gitea.entrypoints=web
+      # - traefik.http.routers.gitea.tls.certresolver=letsencrypt
+      - traefik.http.services.gitea.loadbalancer.server.port=3000
       - traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)
       - traefik.tcp.routers.gitea-ssh.entrypoints=ssh
       - traefik.tcp.services.gitea-ssh.loadbalancer.server.port=22

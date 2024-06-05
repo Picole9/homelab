@@ -1,9 +1,15 @@
-version: "3.8"
-
 include:
   - traefik.yml
-  # - gitea.yml
-  # - home-assistant.yml
+  - gitea.yml
+  - home-assistant.yml
   - pihole.yml
-  # - tandoor.yml
+  - tandoor.yml
   # - watchtower.yml
+  - whoami.yml
+
+networks:
+  traefik:
+    name: traefik
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
