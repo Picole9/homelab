@@ -2,15 +2,16 @@
 docker-compose-files for my homelab
 
 ## overview
-* docker-compose.yaml: traefik
+* docker-compose.yml: include all services
 * service-files:
-    * {service}.yaml: docker-compose
+    * {service}.yml: docker-compose for service
     * ./env/{service}: env\_files
     * ./volumes/{service}: volumes
 
 ## installation
 * docker from ansible-repo: `ansible-playbook server.yaml -l server --ask-become-pass`
-* environment-variables: `cp env-tmpl/ env/`
+* global-environment-variables: `cp .env-tmpl .env`
+* service-environment-variables: `cp env-tmpl/ env/`
 
 ## commands
-* start-all: `docker compose $(find . -name "*.yml" -printf "-f %p ") up -d`
+* startup: `docker compose up -d --remove-orphans`
