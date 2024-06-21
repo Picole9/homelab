@@ -14,7 +14,7 @@ services:
 
   web_recipes:
     image: vabene1111/recipes
-    container_name: web_recipes
+    container_name: tandoor_web
     restart: unless-stopped
     env_file:
       - ./env/tandoor.env
