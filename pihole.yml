@@ -11,18 +11,13 @@ services:
       - TZ=Europe/Berlin
       - WEBPASSWORD=
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/pihole/etc-pihole:/etc/pihole
       - ./volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
-    cap_add:
-      - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
+    # cap_add:
+    #   - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
     networks:
       traefik:
-        ipv4_address: 172.21.0.6
     labels:
       - traefik.enable=true
       - traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`) || Host(`${LOCALIP}`)
-      - traefik.http.routers.pihole.entrypoints=web
-      # - traefik.http.routers.pihole.tls.certresolver=letsencrypt
       - traefik.http.services.pihole.loadbalancer.server.port=80

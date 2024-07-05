@@ -4,20 +4,18 @@ services:
     container_name: gitea
     restart: unless-stopped
     environment:
+      - TZ=Europe/Berlin
       - USER_UID=1000
       - USER_GID=1000
     volumes:
       - ./volumes/gitea/data:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+    healthcheck: 
+      test: curl -f http://localhost:3000/api/v1/version || exit 1
     networks:
       traefik:
-        ipv4_address: 172.21.0.13
     labels:
       - traefik.enable=true
       - traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)
-      - traefik.http.routers.gitea.entrypoints=web
-      # - traefik.http.routers.gitea.tls.certresolver=letsencrypt
       - traefik.http.services.gitea.loadbalancer.server.port=3000
       - traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)
       - traefik.tcp.routers.gitea-ssh.entrypoints=ssh

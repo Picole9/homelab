@@ -4,23 +4,25 @@ services:
     container_name: tandoor_db
     restart: unless-stopped
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
       - ./volumes/tandoor/postgresql:/var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Berlin
+    healthcheck: 
+      test: pg_isready
     env_file:
       - ./env/tandoor.env
     networks:
-      - tandoor
+      tandoor:
 
   web_recipes:
     image: vabene1111/recipes
     container_name: tandoor_web
     restart: unless-stopped
+    environment:
+      - TZ=Europe/Berlin
     env_file:
       - ./env/tandoor.env
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
       - staticfiles:/opt/recipes/staticfiles
       # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
       - nginx_config:/opt/recipes/nginx/conf.d
@@ -29,35 +31,30 @@ services:
       - db_recipes
     networks:
       tandoor:
-      traefik:
-        ipv4_address: 172.21.0.11
-    dns:
-      - 172.21.0.6
 
   nginx_recipes:
     image: nginx:mainline-alpine
     container_name: tandoor_nginx
     restart: unless-stopped
+    environment:
+      - TZ=Europe/Berlin
     env_file:
       - ./env/tandoor.env
     depends_on:
       - web_recipes
     volumes:
       # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static:ro
       - ./volumes/tandoor/mediafiles:/media:ro
+    healthcheck: 
+      test: curl -f http://localhost || exit 1
     networks:
       traefik:
-        ipv4_address: 172.21.0.12
       tandoor:
     labels:
       - traefik.enable=true
       - traefik.http.routers.tandoor.rule=Host(`tandoor.${DOMAIN}`)
-      - traefik.http.routers.tandoor.entrypoints=web
-      # - traefik.http.routers.tandoor.tls.certresolver=letsencrypt
       - traefik.http.services.tandoor.loadbalancer.server.port=80
 
 volumes:

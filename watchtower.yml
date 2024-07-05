@@ -3,7 +3,9 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     restart: unless-stopped
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_SCHEDULE: 0 0 4 * * *
+      WATCHTOWER_CLEANUP: "true"
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock

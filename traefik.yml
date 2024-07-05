@@ -4,25 +4,32 @@ services:
     container_name: traefik
     restart: unless-stopped
     command:
-      #- --log.level=DEBUG
+      - --log.level=DEBUG
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.network=traefik
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
-      # - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      # - --entryPoints.web.http.redirections.entrypoint.scheme=https
-      # - --entrypoints.websecure.address=:443
-      # - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
-      # - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
-      - --entrypoints.ssh.address=:2222
-      # - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
-      # - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=duckdns
-      # - --certificatesresolvers.letsencrypt.acme.email=${MAIL}
-      # - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entryPoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.asDefault=true
+      - --entrypoints.websecure.http.tls.certresolver=letsencrypt
+      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
+      - --entrypoints.ssh.address=:222
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.disablepropagationcheck=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=${PROVIDER}
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers[0]=1.1.1.1:53
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers[1]=8.8.8.8:53
+      - --certificatesresolvers.letsencrypt.acme.email=${MAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
     ports:
       - 80:80
-      - 2222:2222
+      - 443:443
+      - 222:222
     env_file:
       - ./env/traefik.env
     volumes:
@@ -32,10 +39,7 @@ services:
       - ./volumes/traefik/letsencrypt:/letsencrypt
     networks:
       traefik:
-        ipv4_address: 172.21.0.5
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.traefik.entrypoints=web
-      # - traefik.http.routers.traefik.tls.certresolver=letsencrypt
-      - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - traefik.http.routers.traefik.service=api@internal

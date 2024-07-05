@@ -1,11 +1,11 @@
 include:
   - traefik.yml
+  - pihole.yml
   - gitea.yml
   - home-assistant.yml
-  - pihole.yml
+  - owncloud.yml
   - tandoor.yml
-  # - watchtower.yml
-  - whoami.yml
+  - watchtower.yml
 
 networks:
   traefik:
