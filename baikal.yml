@@ -1,0 +1,19 @@
+services:
+  baikal:
+    image: ckulka/baikal:nginx
+    container_name: baikal
+    restart: unless-stopped
+    volumes:
+      - ./volumes/baikal/config:/var/www/baikal/config
+      - ./volumes/baikal/data:/var/www/baikal/Specific
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.baikal.rule: Host(`baikal.${DOMAIN}`)
+      traefik.http.routers.baikal.tls: true
+      # Traefik middleware required for iOS, see https://github.com/ckulka/baikal-docker/issues/37.
+      traefik.http.routers.baikal.middlewares: baikal-dav
+      traefik.http.middlewares.baikal-dav.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
+      traefik.http.middlewares.baikal-dav.redirectregex.replacement: https://$$1/dav.php/
+      traefik.http.middlewares.baikal-dav.redirectregex.permanent: true

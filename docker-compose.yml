@@ -1,4 +1,5 @@
 include:
+  - baikal.yml
   - traefik.yml
   - pihole.yml
   - gitea.yml
