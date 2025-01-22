@@ -4,10 +4,10 @@ services:
     container_name: tandoor_db
     restart: unless-stopped
     volumes:
-      - ./volumes/tandoor/postgresql:/var/lib/postgresql/data
+      - tandoor_db:/var/lib/postgresql/data
     environment:
       - TZ=Europe/Berlin
-    healthcheck: 
+    healthcheck:
       test: pg_isready
     env_file:
       - ./env/tandoor.env
@@ -47,7 +47,7 @@ services:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static:ro
       - ./volumes/tandoor/mediafiles:/media:ro
-    healthcheck: 
+    healthcheck:
       test: curl -f http://localhost || exit 1
     networks:
       traefik:
@@ -60,6 +60,7 @@ services:
 volumes:
   nginx_config:
   staticfiles:
+  tandoor_db:
 
 networks:
   tandoor:

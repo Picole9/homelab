@@ -1,0 +1,18 @@
+services:
+  bitwarden:
+    image: vaultwarden/server:latest
+    container_name: bitwarden
+    restart: unless-stopped
+    volumes:
+      - ./volumes/bitwarden:/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      DOMAIN: https://bitwarden.${DOMAIN}
+      # enable for first account
+      # SIGNUPS_ALLOWED: "true"
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.bitwarden.rule: Host(`bitwarden.${DOMAIN}`)
+      traefik.http.services.bitwarden.loadbalancer.server.port: 80

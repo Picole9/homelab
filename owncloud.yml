@@ -16,10 +16,11 @@ services:
       OCIS_INSECURE: false
       # # do not use SSL between Traefik and oCIS
       PROXY_TLS: false
+      PROXY_ENABLE_BASIC_AUTH: true
     volumes:
       - ./volumes/owncloud/config:/etc/ocis
       - ./volumes/owncloud/data:/var/lib/ocis
-    healthcheck: 
+    healthcheck:
       test: curl -f http://localhost:9104/healthz || exit 1
     networks:
       traefik:

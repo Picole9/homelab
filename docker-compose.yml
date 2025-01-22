@@ -1,11 +1,13 @@
 include:
   - baikal.yml
-  - traefik.yml
-  - pihole.yml
+  - bitwarden.yml
   - gitea.yml
   - home-assistant.yml
+  # - keycloak.yml
   - owncloud.yml
+  - pihole.yml
   - tandoor.yml
+  - traefik.yml
   - watchtower.yml
 
 networks:

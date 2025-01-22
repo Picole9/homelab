@@ -29,6 +29,15 @@ docker-compose-files for my homelab
     * if `backup/{service}.sh` exists, than uses that script instead
 
 ## services
+
+### baikal
+* [documentation](https://sabre.io/baikal/)
+* CalDAV + CardDAV server
+
+### bitwarden
+* [documentation](https://github.com/dani-garcia/vaultwarden/wiki)
+* password-manager, unofficial Bitwarden server implementation
+
 ### traefik
 * [documentation](https://doc.traefik.io/traefik/)
 * manages traffic for every service
@@ -57,6 +66,7 @@ docker-compose-files for my homelab
 ### owncloud infinite scale (oCIS)
 * [documentation](https://owncloud.dev/ocis/)
 * file-sync and share platform
+* backup with rclone, example config in `env-tmpl/rclone.conf`, set domain, user and password (with `rclone obscure`) accordingly
 * typical errors:
     * permission denied
         * `sudo chown -R 1000:1001 volumes/owncloud/`
@@ -91,7 +101,7 @@ services:
       - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)
       - traefik.http.services.whoami.loadbalancer.server.port=80
 ```
-* edit traefik-labels: router-name, service-name, domain
+* edit traefik-labels: router-name, service-name, subdomain
 
 ## helpful ressources
 * [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)

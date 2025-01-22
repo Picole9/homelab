@@ -7,8 +7,10 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ./volumes/home-assistant:/config
-    privileged: true
-    healthcheck: 
+    # privileged: true
+    devices:
+      - /dev/serial/by-id/usb-Nabu_Casa_Home_Assistant_Connect_ZBT-1_b464b0276531ef1187ba57cfdfbc56eb-if00-port0:/dev/zigbee
+    healthcheck:
       test: curl -f http://localhost:8123 || exit 1
     networks:
       traefik:
