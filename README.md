@@ -18,7 +18,7 @@ docker-compose-files for my homelab
 * configuration domains for dns-challenge:
     * browser with ${LOCALIP}
     * configure dns-record with ${DOMAIN} and ${LOCALIP}
-    * CNAME record forevery service pointing to ${DOMAIN} (e.g. traefik.${DOMAIN} to ${DOMAIN})
+    * CNAME record in pihole for every service pointing to ${DOMAIN} (e.g. traefik.${DOMAIN} to ${DOMAIN})
 * restart (`docker compose down` and `docker compose up -d`)
 
 ## backup
@@ -71,8 +71,8 @@ docker-compose-files for my homelab
     * permission denied
         * `sudo chown -R 1000:1001 volumes/owncloud/`
 
-### tandoor
-* [documentation](https://docs.tandoor.dev/)
+### mealie
+* [documentation](https://mealie.io/)
 * recipe manager
 
 ### watchtower

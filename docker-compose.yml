@@ -3,10 +3,9 @@ include:
   - bitwarden.yml
   - gitea.yml
   - home-assistant.yml
-  # - keycloak.yml
+  - mealie.yml
   - owncloud.yml
   - pihole.yml
-  - tandoor.yml
   - traefik.yml
   - watchtower.yml
 

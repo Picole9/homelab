@@ -1,0 +1,20 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest
+    container_name: mealie
+    restart: unless-stopped
+    volumes:
+      - ./volumes/mealie:/app/data
+    environment:
+      # enable for first account
+      # ALLOW_SIGNUP: "true"
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Berlin
+      BASE_URL: https://mealie.${DOMAIN}
+    networks:
+      traefik:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mealie.rule: Host(`mealie.${DOMAIN}`)
+      traefik.http.services.mealie.loadbalancer.server.port: 9000
