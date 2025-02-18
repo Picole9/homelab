@@ -9,7 +9,7 @@ services:
       # enable for first account
       # ALLOW_SIGNUP: "true"
       PUID: 1000
-      PGID: 1000
+      PGID: 1001
       TZ: Europe/Berlin
       BASE_URL: https://mealie.${DOMAIN}
     networks:
