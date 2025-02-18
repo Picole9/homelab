@@ -63,6 +63,10 @@ docker-compose-files for my homelab
 * [documentation](https://www.home-assistant.io/)
 * smart home automation
 
+### jellyfin
+* [documentation](https://jellyfin.org/docs/)
+* media server
+
 ### owncloud infinite scale (oCIS)
 * [documentation](https://owncloud.dev/ocis/)
 * file-sync and share platform
