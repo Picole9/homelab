@@ -6,13 +6,21 @@ services:
     environment:
       - TZ=Europe/Berlin
       - USER_UID=1000
-      - USER_GID=1000
+      - USER_GID=1001
+      - GITEA__SERVER__ROOT_URL=https://gitea.${DOMAIN}
+    env_file:
+      - ./env/gitea.env
     volumes:
       - ./volumes/gitea/data:/data
-    healthcheck: 
-      test: curl -f http://localhost:3000/api/v1/version || exit 1
+    healthcheck:
+      test: curl -f http://gitea:3000/api/healthz || exit 1
+      interval: 10s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
     networks:
       traefik:
+      gitea:
     labels:
       - traefik.enable=true
       - traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)
@@ -20,3 +28,24 @@ services:
       - traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)
       - traefik.tcp.routers.gitea-ssh.entrypoints=ssh
       - traefik.tcp.services.gitea-ssh.loadbalancer.server.port=22
+
+  gitea_runner:
+    image: gitea/act_runner
+    container_name: gitea_runner
+    restart: unless-stopped
+    depends_on:
+      gitea:
+        condition: service_healthy
+        restart: true
+    environment:
+      - GITEA_INSTANCE_URL=https://gitea.${DOMAIN}
+    env_file:
+      - ./env/gitea.env
+    volumes:
+      - ./volumes/gitea/runner:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      gitea:
+
+networks:
+  gitea:
