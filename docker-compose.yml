@@ -3,6 +3,7 @@ include:
   - bitwarden.yml
   - gitea.yml
   - home-assistant.yml
+  - jellyfin.yml
   - mealie.yml
   - owncloud.yml
   - pihole.yml
