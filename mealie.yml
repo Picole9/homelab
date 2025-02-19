@@ -8,8 +8,8 @@ services:
     environment:
       # enable for first account
       # ALLOW_SIGNUP: "true"
-      PUID: 1000
-      PGID: 1001
+      PUID: ${UID}
+      PGID: ${GID}
       TZ: Europe/Berlin
       BASE_URL: https://mealie.${DOMAIN}
     networks:

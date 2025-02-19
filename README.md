@@ -71,9 +71,6 @@ docker-compose-files for my homelab
 * [documentation](https://owncloud.dev/ocis/)
 * file-sync and share platform
 * backup with rclone, example config in `env-tmpl/rclone.conf`, set domain, user and password (with `rclone obscure`) accordingly
-* typical errors:
-    * permission denied
-        * `sudo chown -R 1000:1001 volumes/owncloud/`
 
 ### mealie
 * [documentation](https://mealie.io/)

@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Berlin
-      - USER_UID=1000
-      - USER_GID=1001
+      - USER_UID=${UID}
+      - USER_GID=${GID}
       - GITEA__SERVER__ROOT_URL=https://gitea.${DOMAIN}
     env_file:
       - ./env/gitea.env

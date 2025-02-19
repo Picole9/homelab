@@ -9,8 +9,8 @@ services:
     environment:
       - TZ=Europe/Berlin
       - FTLCONF_dns_listeningMode=all
-      - PIHOLE_UID=1000
-      - PIHOLE_GID=1001
+      - PIHOLE_UID=${UID}
+      - PIHOLE_GID=${GID}
     env_file:
       - ./env/pihole.env
     volumes:
