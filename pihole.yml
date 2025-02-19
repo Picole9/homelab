@@ -7,12 +7,15 @@ services:
       - "53:53/udp"
     restart: unless-stopped
     environment:
-      - PIHOLE_DNS_=8.8.8.8;8.8.8.4
       - TZ=Europe/Berlin
-      - WEBPASSWORD=
+      - FTLCONF_dns_listeningMode=all
+      - PIHOLE_UID=1000
+      - PIHOLE_GID=1001
+    env_file:
+      - ./env/pihole.env
     volumes:
-      - ./volumes/pihole/etc-pihole:/etc/pihole
-      - ./volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+      - ./volumes/pihole:/etc/pihole
+      # - ./volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
     # cap_add:
     #   - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
     networks:
