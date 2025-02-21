@@ -10,7 +10,7 @@ services:
       # ALLOW_SIGNUP: "true"
       PUID: ${UID}
       PGID: ${GID}
-      TZ: Europe/Berlin
+      TZ: ${TZ}
       BASE_URL: https://mealie.${DOMAIN}
     networks:
       traefik:

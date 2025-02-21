@@ -5,16 +5,11 @@ services:
     restart: unless-stopped
     entrypoint:
       - /bin/sh
-    # run ocis init to initialize a configuration file with random secrets
-    # it will fail on subsequent runs, because the config file already exists
-    # therefore we ignore the error and then start the ocis server
     command: ["-c", "ocis init || true; ocis server"]
     environment:
-      TZ: Europe/Berlin
+      TZ: ${TZ}
       OCIS_URL: https://owncloud.${DOMAIN}
-      # needed if oCIS / Traefik is using self generated certificates
       OCIS_INSECURE: false
-      # # do not use SSL between Traefik and oCIS
       PROXY_TLS: false
       PROXY_ENABLE_BASIC_AUTH: true
     volumes:
@@ -25,6 +20,6 @@ services:
     networks:
       traefik:
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.owncloud.rule=Host(`owncloud.${DOMAIN}`)
-      - traefik.http.services.owncloud.loadbalancer.server.port=9200
+      traefik.enable: true
+      traefik.http.routers.owncloud.rule: Host(`owncloud.${DOMAIN}`)
+      traefik.http.services.owncloud.loadbalancer.server.port: 9200

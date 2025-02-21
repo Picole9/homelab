@@ -4,7 +4,7 @@ services:
     container_name: watchtower
     restart: unless-stopped
     environment:
-      TZ: Europe/Berlin
+      TZ: ${TZ}
       WATCHTOWER_SCHEDULE: 0 0 4 * * *
       WATCHTOWER_CLEANUP: "true"
     volumes:

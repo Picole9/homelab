@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./volumes/bitwarden:/data
+      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
       DOMAIN: https://bitwarden.${DOMAIN}

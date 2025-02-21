@@ -4,7 +4,7 @@ services:
     container_name: home-assistant
     restart: unless-stopped
     environment:
-      - TZ=Europe/Berlin
+      TZ: ${TZ}
     volumes:
       - ./volumes/home-assistant:/config
       - /var/run/docker.sock:/var/run/docker.sock
@@ -16,6 +16,6 @@ services:
     networks:
       traefik:
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.home-assistant.rule=Host(`home-assistant.${DOMAIN}`)
-      - traefik.http.services.home-assistant.loadbalancer.server.port=8123
+      traefik.enable: true
+      traefik.http.routers.home-assistant.rule: Host(`home-assistant.${DOMAIN}`)
+      traefik.http.services.home-assistant.loadbalancer.server.port: 8123

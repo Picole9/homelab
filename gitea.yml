@@ -4,14 +4,18 @@ services:
     container_name: gitea
     restart: unless-stopped
     environment:
-      - TZ=Europe/Berlin
-      - USER_UID=${UID}
-      - USER_GID=${GID}
-      - GITEA__SERVER__ROOT_URL=https://gitea.${DOMAIN}
+      USER_UID: ${UID}
+      USER_GID: ${GID}
+      GITEA__TIME__DEFAULT_UI_LOCATION: ${TZ}
+      GITEA__SERVER__ROOT_URL: https://gitea.${DOMAIN}
+      GITEA__SERVER__SSH_PORT: 222
+      GITEA__SERVER__SSH_LISTEN_PORT: 222
     env_file:
       - ./env/gitea.env
     volumes:
       - ./volumes/gitea/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: curl -f http://gitea:3000/api/healthz || exit 1
       interval: 10s
@@ -22,12 +26,12 @@ services:
       traefik:
       gitea:
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN}`)
-      - traefik.http.services.gitea.loadbalancer.server.port=3000
-      - traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)
-      - traefik.tcp.routers.gitea-ssh.entrypoints=ssh
-      - traefik.tcp.services.gitea-ssh.loadbalancer.server.port=22
+      traefik.enable: true
+      traefik.http.routers.gitea.rule: Host(`gitea.${DOMAIN}`)
+      traefik.http.services.gitea.loadbalancer.server.port: 3000
+      traefik.tcp.routers.gitea-ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.gitea-ssh.entrypoints: ssh
+      traefik.tcp.services.gitea-ssh.loadbalancer.server.port: 222
 
   gitea_runner:
     image: gitea/act_runner
@@ -38,7 +42,7 @@ services:
         condition: service_healthy
         restart: true
     environment:
-      - GITEA_INSTANCE_URL=https://gitea.${DOMAIN}
+      GITEA_INSTANCE_URL: https://gitea.${DOMAIN}
     env_file:
       - ./env/gitea.env
     volumes:
