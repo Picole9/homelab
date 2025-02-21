@@ -1,10 +1,10 @@
 services:
   baikal:
-    # image: ckulka/baikal:nginx
-    # image with fix for home-assistant
-    image: ghcr.io/mralucarddante/baikal-docker-hass:latest
+    image: ckulka/baikal:nginx
     container_name: baikal
     restart: unless-stopped
+    environment:
+      APPLY_HOME_ASSISTANT_FIX: true
     volumes:
       - ./volumes/baikal/config:/var/www/baikal/config
       - ./volumes/baikal/data:/var/www/baikal/Specific
