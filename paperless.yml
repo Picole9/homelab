@@ -1,0 +1,39 @@
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - paperless-redis
+    volumes:
+      - ./volumes/paperless/data:/usr/src/paperless/data
+      - ./volumes/paperless/media:/usr/src/paperless/media
+      - ./volumes/paperless/export:/usr/src/paperless/export
+      - ./volumes/paperless/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://paperless-redis:6379
+      USERMAP_UID: ${UID}
+      USERMAP_GID: ${GID}
+      PAPERLESS_URL: https://paperless.${DOMAIN}
+    networks:
+      traefik:
+      paperless:
+    labels:
+      traefik.enable: true
+      traefik.http.routers.paperless.rule: Host(`paperless.${DOMAIN}`)
+      traefik.http.services.paperless.loadbalancer.server.port: 8000
+
+  paperless-redis:
+    image: docker.io/library/redis:7
+    container_name: paperless-redis
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    networks:
+      paperless:
+
+networks:
+  paperless:
+
+volumes:
+  redisdata:

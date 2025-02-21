@@ -6,6 +6,7 @@ include:
   - jellyfin.yml
   - mealie.yml
   - owncloud.yml
+  - paperless.yml
   - pihole.yml
   - traefik.yml
   - watchtower.yml
