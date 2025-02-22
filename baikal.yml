@@ -8,6 +8,8 @@ services:
     volumes:
       - ./volumes/baikal/config:/var/www/baikal/config
       - ./volumes/baikal/data:/var/www/baikal/Specific
+    healthcheck:
+      test: curl -f http://baikal/admin || exit 1
     networks:
       traefik:
     labels:
