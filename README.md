@@ -22,16 +22,6 @@ docker-compose-files for my homelab
     * CNAME record in pihole for every service pointing to ${DOMAIN} (e.g. traefik.${DOMAIN} to ${DOMAIN})
 * restart (`docker compose down` and `docker compose up -d`)
 
-## backup
-* run `backup/backup.sh backup/tmp`
-    * parameter: path to backup-folder (defaults to `backup/tmp`)
-    * backup every service (looking for docker-compose-files like `{service}.yml`)
-    * generic: volumes-folder `volumes/{service}` and env-file `env/{service}.env` of that service
-    * if `backup/{service}.sh` exists, than uses that script instead
-* example cronjob:
-    * `sudo crontab -e`
-    * `0 5 * * 1 /bin/bash /path-to-git-repo/backup/backup.sh`
-
 ## services
 
 ### baikal
@@ -41,8 +31,6 @@ docker-compose-files for my homelab
 ### bitwarden
 * [documentation](https://github.com/dani-garcia/vaultwarden/wiki)
 * password-manager, unofficial Bitwarden server implementation
-
-
 
 ### gitea
 * [documentation](https://docs.gitea.com/)
@@ -125,7 +113,17 @@ services:
     * check pihole dns
     * check traefik-dashboard if service exists
 * permission denied
-    * check owner in volumes (`sudo chown -R user:group volume/service`)
+    * check owner in volumes (`sudo chown -R user:group volumes/service`)
+
+## backup
+* run `backup/backup.sh backup/tmp`
+    * parameter: path to backup-folder (defaults to `backup/tmp`)
+    * backup every service (looking for docker-compose-files like `{service}.yml`)
+    * generic: volumes-folder `volumes/{service}` and env-file `env/{service}.env` of that service
+    * if `backup/{service}.sh` exists, than uses that script instead
+* example cronjob:
+    * `sudo crontab -e`
+    * `0 5 * * 1 /bin/bash /path-to-git-repo/backup/backup.sh`
 
 ## helpful ressources
 * [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
