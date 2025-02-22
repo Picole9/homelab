@@ -23,11 +23,14 @@ docker-compose-files for my homelab
 * restart (`docker compose down` and `docker compose up -d`)
 
 ## backup
-* run `backup/backup.sh .`
-    * parameter: path to backup-folder (defaults to `backup/tmp/`)
+* run `backup/backup.sh backup/tmp`
+    * parameter: path to backup-folder (defaults to `backup/tmp`)
     * backup every service (looking for docker-compose-files like `{service}.yml`)
     * generic: volumes-folder `volumes/{service}` and env-file `env/{service}.env` of that service
     * if `backup/{service}.sh` exists, than uses that script instead
+* example cronjob:
+    * `sudo crontab -e`
+    * `0 5 * * 1 /bin/bash /path-to-git-repo/backup/backup.sh`
 
 ## services
 
