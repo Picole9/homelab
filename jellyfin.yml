@@ -5,13 +5,13 @@ services:
     user: ${UID}:${GID}
     restart: unless-stopped
     volumes:
-      - ./volumes/jellyfin/config:/config
+      - ./volumes/jellyfin/config/jellyfin:/config
       - ./volumes/jellyfin/films:/films
       - ./volumes/jellyfin/shows:/shows
       - ./volumes/jellyfin/music:/music
       - ./volumes/jellyfin/other:/other
     environment:
-      - TZ=Europe/Berlin
+      TZ: ${TZ}
     networks:
       traefik:
     labels:
