@@ -14,6 +14,7 @@ docker-compose-files for my homelab
 * configuration:
     * global-environment-variables: `cp .env-tmpl .env`
     * service-environment-variables: `cp env-tmpl/ env/`
+    * setup envs in those files
 * first startup: `docker compose up -d --remove-orphans`
 * configuration domains for dns-challenge:
     * browser with ${LOCALIP}
@@ -23,7 +24,7 @@ docker-compose-files for my homelab
 
 ## backup
 * run `backup/backup.sh .`
-    * parameter: path to git-root
+    * parameter: path to backup-folder (defaults to `backup/tmp/`)
     * backup every service (looking for docker-compose-files like `{service}.yml`)
     * generic: volumes-folder `volumes/{service}` and env-file `env/{service}.env` of that service
     * if `backup/{service}.sh` exists, than uses that script instead
@@ -38,20 +39,7 @@ docker-compose-files for my homelab
 * [documentation](https://github.com/dani-garcia/vaultwarden/wiki)
 * password-manager, unofficial Bitwarden server implementation
 
-### traefik
-* [documentation](https://doc.traefik.io/traefik/)
-* manages traffic for every service
-* entrypoints:
-    * 80 gets redirected to 443
-    * 443 main access port
-    * 222 ssh (git)
-* lets-encrypt-certificates via dns-challenge (lego)
 
-### pihole
-* [documentation](https://pi-hole.net/)
-* as dns-server
-    * blocking unwanted domains
-    * local dns
 
 ### gitea
 * [documentation](https://docs.gitea.com/)
@@ -63,25 +51,48 @@ docker-compose-files for my homelab
 * [documentation](https://www.home-assistant.io/)
 * smart home automation
 
+### immich
+* [documentation](https://immich.app/docs/overview/introduction)
+* photo and video management
+
 ### jellyfin
 * [documentation](https://jellyfin.org/docs/)
 * media server
+
+### mealie
+* [documentation](https://mealie.io/)
+* recipe manager
 
 ### owncloud infinite scale (oCIS)
 * [documentation](https://owncloud.dev/ocis/)
 * file-sync and share platform
 * backup with rclone, example config in `env-tmpl/rclone.conf`, set domain, user and password (with `rclone obscure`) accordingly
 
-### mealie
-* [documentation](https://mealie.io/)
-* recipe manager
+### paperless
+* [documentation](https://docs.paperless-ngx.com/)
+* document management
+
+### pihole
+* [documentation](https://pi-hole.net/)
+* as dns-server
+    * blocking unwanted domains
+    * local dns
+
+### traefik
+* [documentation](https://doc.traefik.io/traefik/)
+* manages traffic for every service
+* entrypoints:
+    * 80 gets redirected to 443
+    * 443 main access port
+    * 222 ssh (git)
+* lets-encrypt-certificates via dns-challenge (lego)
 
 ### watchtower
 * [documentation](https://containrrr.dev/watchtower/)
 * automatic docker container image updates every day at 4am
 
-### template new service
-* add whoami to docker-compose.yml
+### template for a new service
+* include whoami in docker-compose.yml
 * whoami.yml:
 ```yaml
 services:
@@ -90,7 +101,7 @@ services:
     container_name: whoami
     restart: unless-stopped
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TZ}
     # env_file:
     #   - ./env/whoami.env
     # volumes:
@@ -102,7 +113,16 @@ services:
       - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)
       - traefik.http.services.whoami.loadbalancer.server.port=80
 ```
-* edit traefik-labels: router-name, service-name, subdomain
+
+## trouble shooting
+* 404
+    * check config:
+        * networks
+        * traefik-labels: router-name, service-name, subdomain
+    * check pihole dns
+    * check traefik-dashboard if service exists
+* permission denied
+    * check owner in volumes (`sudo chown -R user:group volume/service`)
 
 ## helpful ressources
 * [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)

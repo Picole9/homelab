@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo tar -czf "backup/tmp/$1.tar.gz" "volumes/jellyfin/config"
+sudo tar -czf "$1/$2.tar.gz" "volumes/$2/config"

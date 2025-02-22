@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "- rclone"
-mkdir "backup/tmp/$1/"
-rclone copy --config=backup/rclone.conf ocis: "backup/tmp/$1/"
+mkdir "$1/$2/"
+rclone copy --config=backup/rclone.conf ocis: "$1/$2/"
