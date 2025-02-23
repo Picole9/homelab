@@ -1,6 +1,6 @@
 services:
   immich-server:
-    container_name: immich_server
+    container_name: immich-server
     image: ghcr.io/immich-app/immich-server:v1.126.1
     volumes:
       - ./volumes/immich/library:/usr/src/app/upload
@@ -27,7 +27,7 @@ services:
       traefik.http.services.immich.loadbalancer.server.port: 2283
 
   immich-machine-learning:
-    container_name: immich_machine_learning
+    container_name: immich-machine-learning
     image: ghcr.io/immich-app/immich-machine-learning:v1.126.1
     environment:
       TZ: ${TZ}
@@ -45,7 +45,7 @@ services:
       immich:
 
   immich-redis:
-    container_name: immich_redis
+    container_name: immich-redis
     image: docker.io/redis:6.2-alpine@sha256:905c4ee67b8e0aa955331960d2aa745781e6bd89afc44a8584bfd13bc890f0ae
     healthcheck:
       test: redis-cli ping || exit 1
@@ -54,7 +54,7 @@ services:
       immich:
 
   immich-database:
-    container_name: immich_postgres
+    container_name: immich-postgres
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     environment:
       POSTGRES_USER: postgres
