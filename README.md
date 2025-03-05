@@ -50,6 +50,10 @@ docker-compose-files for my homelab
 * [documentation](https://jellyfin.org/docs/)
 * media server
 
+### linkwarden
+* [documentation](https://docs.linkwarden.app/)
+* bookmark manager
+
 ### mealie
 * [documentation](https://mealie.io/)
 * recipe manager
@@ -118,12 +122,26 @@ services:
 ## backup
 * run `backup/backup.sh backup/tmp`
     * parameter: path to backup-folder (defaults to `backup/tmp`)
-    * backup every service (looking for docker-compose-files like `{service}.yml`)
+    * backup every service (looking for docker-compose-service-files  `{service}.yml`)
     * generic: volumes-folder `volumes/{service}` and env-file `env/{service}.env` of that service
     * if `backup/{service}.sh` exists, than uses that script instead
-* example cronjob:
+* example weekly cronjob:
     * `sudo crontab -e`
     * `0 5 * * 1 /bin/bash /path-to-git-repo/backup/backup.sh`
+* example backup-script:
+    * $1: path-to-backup
+    * $2: service-name
+    * $3: backup/restore
+```bash
+#!/bin/bash
+if [ "$3" = "backup" ]; then
+    echo "- backup"
+    tar -czf "$1/$2.tar.gz" "volumes/$2/*" "env/$2*.env" "env/.$2*"
+else
+    echo "- restore"
+    tar xf "${1:-backup/tmp}/$service.tar.gz"
+fi
+```
 
 ## helpful ressources
 * [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
