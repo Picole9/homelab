@@ -1,4 +1,8 @@
 #!/bin/bash
-echo "- rclone"
-mkdir "$1/$2/"
-rclone copy --config=env/rclone.conf ocis: "$1/$2/"
+if [ "$3" = "backup" ]; then
+    echo "- rclone"
+    mkdir -p "$1/$2/"
+    rclone sync --config=env/rclone.conf ocis: "$1/$2/"
+else
+    echo "- only files in backup. Setup a new server and copy files"
+fi

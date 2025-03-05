@@ -1,5 +1,8 @@
 #!/bin/bash
-sudo tar -czf "$1/$2.tar.gz" "volumes/$2/library/backups"
-echo "- rclone"
-mkdir "$1/$2/"
-rclone copy --config=env/rclone.conf "volumes/$2/library/library" "$1/$2/"
+if [ "$3" = "backup" ]; then
+    echo "- rclone"
+    mkdir -p "$1/$2/"
+    rclone sync --config=env/rclone.conf "volumes/$2/library/library" "$1/$2/"
+else
+    echo "- only files in backup. Setup a new server and copy files"
+fi
