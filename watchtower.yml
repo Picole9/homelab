@@ -6,6 +6,7 @@ services:
     environment:
       TZ: ${TZ}
       WATCHTOWER_SCHEDULE: 0 0 4 * * *
-      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_CLEANUP: true
+    env_file: ./env/watchtower.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
